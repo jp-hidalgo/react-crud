@@ -1,21 +1,20 @@
 import http from "../http-common";
 
-class TutorialDataService {
-  getAll() {
-    return http.get("/tutorials");
-  }
-
-  get(id) {
-    return http.get(`/tutorials/${id}`);
-  }
-
-  create(data) {
-    return http.post("/tutorials", data);
-  }
-
-  findByTeam(team) {
-    return http.get(`/teams?title=${team}`);
-  }
+const findPlayers = (name, order) => {
+    return http.get(`/player?name=${name}&order=${order}`);
 }
 
-export default new TutorialDataService();
+
+const create = data => {
+    return http.post("/", data);
+}
+
+const findByTeam = team => {
+    return http.post(`/teams?title=${team}`);
+}
+//eslint-disable-next-line
+export default {
+    findPlayers,
+    create,
+    findByTeam
+};
