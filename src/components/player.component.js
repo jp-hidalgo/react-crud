@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
-import TutorialDataService from "../services/tutorial.service";
+import PlayerDataService from "../services/player.service";
 
-const Tutorial = props => {
-  const initialTutorialState = {
+const Player = props => {
+  const initialPlayerState = {
     id: null,
-    title: "",
-    description: "",
-    published: false
+    name: "",
+    fieldPos: "",
+    nationality: "",
+    team:""
   };
-  const [currentTutorial, setCurrentTutorial] = useState(initialTutorialState);
+  const [currentPlayer, setCurrentPlayer] = useState(initialPlayerState);
   const [message, setMessage] = useState("");
 
-  const getTutorial = id => {
-    TutorialDataService.get(id)
+  const getPlayer = id => {
+    PlayerDataService.get(id)
       .then(response => {
-        setCurrentTutorial(response.data);
+        setCurrentPlayer(response.data);
         console.log(response.data);
       })
       .catch(e => {
@@ -23,25 +24,25 @@ const Tutorial = props => {
   };
 
   useEffect(() => {
-    getTutorial(props.match.params.id);
+    getPlayer(props.match.params.id);
   }, [props.match.params.id]);
 
   const handleInputChange = event => {
     const { name, value } = event.target;
-    setCurrentTutorial({ ...currentTutorial, [name]: value });
+    setCurrentPlayer({ ...currentPlayer, [name]: value });
   };
 
   const updatePublished = status => {
     var data = {
-      id: currentTutorial.id,
-      title: currentTutorial.title,
-      description: currentTutorial.description,
+      id: currentPlayer.id,
+      title: currentPlayer.title,
+      description: currentPlayer.description,
       published: status
     };
 
-    TutorialDataService.update(currentTutorial.id, data)
+    PlayerDataService.update(currentPlayer.id, data)
       .then(response => {
-        setCurrentTutorial({ ...currentTutorial, published: status });
+        setCurrentPlayer({ ...currentPlayer, published: status });
         console.log(response.data);
       })
       .catch(e => {
@@ -49,22 +50,22 @@ const Tutorial = props => {
       });
   };
 
-  const updateTutorial = () => {
-    TutorialDataService.update(currentTutorial.id, currentTutorial)
+  const updatePlayer = () => {
+    PlayerDataService.update(currentPlayer.id, currentPlayer)
       .then(response => {
         console.log(response.data);
-        setMessage("The tutorial was updated successfully!");
+        setMessage("The player was updated successfully!");
       })
       .catch(e => {
         console.log(e);
       });
   };
 
-  const deleteTutorial = () => {
-    TutorialDataService.remove(currentTutorial.id)
+  const deletePlayer = () => {
+    PlayerDataService.remove(currentPlayer.id)
       .then(response => {
         console.log(response.data);
-        props.history.push("/tutorials");
+        props.history.push("/players");
       })
       .catch(e => {
         console.log(e);
@@ -73,9 +74,9 @@ const Tutorial = props => {
 
   return (
     <div>
-    {currentTutorial ? (
+    {currentPlayer ? (
       <div className="edit-form">
-        <h4>Tutorial</h4>
+        <h4>Player</h4>
         <form>
           <div className="form-group">
             <label htmlFor="title">Title</label>
@@ -84,7 +85,7 @@ const Tutorial = props => {
               className="form-control"
               id="title"
               name="title"
-              value={currentTutorial.title}
+              value={currentPlayer.title}
               onChange={handleInputChange}
             />
           </div>
@@ -95,7 +96,7 @@ const Tutorial = props => {
               className="form-control"
               id="description"
               name="description"
-              value={currentTutorial.description}
+              value={currentPlayer.description}
               onChange={handleInputChange}
             />
           </div>
@@ -104,11 +105,11 @@ const Tutorial = props => {
             <label>
               <strong>Status:</strong>
             </label>
-            {currentTutorial.published ? "Published" : "Pending"}
+            {currentPlayer.published ? "Published" : "Pending"}
           </div>
         </form>
 
-        {currentTutorial.published ? (
+        {currentPlayer.published ? (
           <button
             className="badge badge-primary mr-2"
             onClick={() => updatePublished(false)}
@@ -124,14 +125,14 @@ const Tutorial = props => {
           </button>
         )}
 
-        <button className="badge badge-danger mr-2" onClick={deleteTutorial}>
+        <button className="badge badge-danger mr-2" onClick={deletePlayer}>
           Delete
         </button>
 
         <button
           type="submit"
           className="badge badge-success"
-          onClick={updateTutorial}
+          onClick={updatePlayer}
         >
           Update
         </button>
@@ -140,11 +141,11 @@ const Tutorial = props => {
     ) : (
       <div>
         <br />
-        <p>Please click on a Tutorial...</p>
+        <p>Please click on a Player...</p>
       </div>
     )}
   </div>
   );
 };
 
-export default Tutorial;
+export default Player;
