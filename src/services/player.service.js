@@ -1,13 +1,13 @@
 import http from "../http-common";
 
 const getAll=()=>{
-    return http.post("/teams");
+    return http.post("/team");
 }
 const get=id=>{
     return http.get(`/player/${id}`);
 }
 const findPlayers = (name, order) => {
-    return http.get(`/player?name=${name}&order=${order}`);
+    return http.get(`/players?name=${name}&order=${order}`);
 }
 
 const create = data => {
@@ -15,7 +15,7 @@ const create = data => {
 }
 
 const findByTeam = team => {
-    return http.post(`/teams?title=${team}`);
+    return http.post(`/team?team=${team}`);
 }
 //eslint-disable-next-line
 export default {

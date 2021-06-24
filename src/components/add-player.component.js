@@ -8,9 +8,7 @@ const AddPlayer = () => {
     nationality: "",
     team: ""
   };
-  const [player, setPlayer] = useState(initialPlayerState);
-  const [data1, setData] = useState([])
-  const [players, setPlayers] = useState([]);
+  const [player] = useState(initialPlayerState);
 
   const savePlayer = () => {
     var data = {
@@ -22,13 +20,7 @@ const AddPlayer = () => {
 
     PlayerDataService.create(data)
       .then(response => {
-        setPlayer({
-          id: response.data.id,
-          name: response.data.name,
-          fieldPos: response.data.fieldPos,
-          nationality: response.data.nationality,
-          team: player.team
-        });
+
         console.log(response.data);
       })
       .catch(e => {
@@ -36,38 +28,31 @@ const AddPlayer = () => {
       });
 
   };
-  const fifaAPIScript=()=>{
-    for (let j = 0; j < 909; j++) {
-      fetch('https://immense-beach-40830.herokuapp.com/https://www.easports.com/fifa/ultimate-team/api/fut/item?page=' + j).then(res => res.json())
-        .then(data => {
-          setData(data)
-          setPlayers(data1.items)
-          for (let i = 0; i < players.length; i++) {
-            const p = players[i]
-            player.name = p.commonName
-            if (player.name === "") {
-              player.name = p.firstName + " " + p.lastName
-            }
-            player.nationality = p.nation.abbrName
-            player.fieldPos = p.position
-            player.team = p.club.abbrName
-            savePlayer()
-
+  for (let j = 1; j < 909; j++) {
+    fetch('https://immense-beach-40830.herokuapp.com/https://www.easports.com/fifa/ultimate-team/api/fut/item?page='+j).then(res => res.json())
+      .then(data => {
+        let d = data;
+        let play = d.items;
+        for (let i = 0; i < play.length; i++) {
+          const p = play[i]
+          player.name = p.commonName
+          if (player.name === "") {
+            player.name = p.firstName + " " + p.lastName
           }
-        }).catch(err => {
-          console.log(err)
-        })
-    }
+          player.nationality = p.nation.abbrName
+          player.fieldPos = p.position
+          player.team = p.club.abbrName
+          savePlayer()
+
+        }
+      }).catch(err => {
+        console.log(err)
+      })
   }
-return (
-  <div>
-    <button
-            className="Button"
-            onClick={fifaAPIScript()}
-          >
-            run script
-          </button>
-  </div>);
+  return (
+    <div>
+      <p>useEffect script</p>
+    </div>);
 };
 
 export default AddPlayer;
